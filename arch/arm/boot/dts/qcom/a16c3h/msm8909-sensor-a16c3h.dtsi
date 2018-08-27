@@ -1,0 +1,66 @@
+/* Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+&tlmm_pinmux {
+	ltr553_int_pin {
+		qcom,pins = <&gp 16>;
+		qcom,pin-func = <0>;
+		qcom,num-grp-pins = <1>;
+		label = "ltr553-irq";
+		ltr553_default: ltr553_default {
+			drive-strength = <6>;
+			bias-pull-up;
+		};
+		ltr553_sleep: ltr553_sleep {
+			drive-strength = <2>;
+			bias-pull-down;
+		};
+	};
+};
+
+&soc {
+	i2c@78b5000 { /* BLSP1 QUP1 */
+		kionix@e {
+			compatible = "kionix,kxtj2-1009";
+			reg = <0x0e>;
+			interrupt-parent = <&msm_gpio>;
+			interrupts = <112 0x2002>;
+			vdd-supply = <&pm8909_l17>;
+			vio-supply = <&pm8909_l6>;
+			kionix,min_interval = <5>;
+			kionix,poll_interval = <100>;
+			kionix,accel_direction = <2>;
+			kionix,accel_irq_use_drdy = <0>;
+			kionix,accel_res = <12>;
+			kionix,accel_g_range = <2>;
+		};
+
+		liteon@23 {
+			compatible = "liteon,ltr553";
+			reg = <0x23>;
+			vdd-supply = <&pm8909_l17>;
+			vio-supply = <&pm8909_l6>;
+			interrupt-parent = <&msm_gpio>;
+			interrupts = <16 0x2002>;
+			pinctrl-names = "default","sleep";
+			pinctrl-0 = <&ltr553_default>;
+			pinctrl-1 = <&ltr553_sleep>;
+			liteon,irq-gpio = <&msm_gpio 16 0x2002>;
+			liteon,als-ps-persist = <0>;
+			liteon,ps-led = <0x7f>;
+			liteon,ps-pulses = <4>;
+			liteon,wakeup-threshold = <4>;
+			liteon,als-integration-time = <0>;
+			liteon,ps-distance-table = <1376 566 343 287 200 170 155>;
+		};
+	};
+};

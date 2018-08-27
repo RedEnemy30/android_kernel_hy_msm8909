@@ -1,0 +1,283 @@
+/* Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 and
+ * only version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+&soc {
+	qcom,ispif@1b0a000 {
+		clocks = <&clock_gcc clk_gcc_camss_ispif_ahb_clk>,
+			<&clock_gcc clk_gcc_camss_ahb_clk>,
+			<&clock_gcc clk_csi0_clk_src>,
+			<&clock_gcc clk_gcc_camss_csi0_clk>,
+			<&clock_gcc clk_gcc_camss_csi0pix_clk>,
+			<&clock_gcc clk_gcc_camss_csi0rdi_clk>,
+			<&clock_gcc clk_csi1_clk_src>,
+			<&clock_gcc clk_gcc_camss_csi1_clk>,
+			<&clock_gcc clk_gcc_camss_csi1pix_clk>,
+			<&clock_gcc clk_gcc_camss_csi1rdi_clk>,
+			<&clock_gcc clk_vfe0_clk_src>,
+			<&clock_gcc clk_gcc_camss_vfe0_clk>,
+			<&clock_gcc clk_gcc_camss_csi_vfe0_clk>;
+		clock-names = "ispif_ahb_clk","camss_ahb_clk",
+			"csi0_src_clk", "csi0_clk",
+			"csi0_pix_clk","csi0_rdi_clk", "csi1_src_clk",
+			"csi1_clk", "csi1_pix_clk", "csi1_rdi_clk",
+			"vfe0_clk_src", "camss_vfe_vfe0_clk",
+			"camss_csi_vfe0_clk";
+		qcom,clock-rates = <40000000 0 0 0 0 0 0 0 0 0 0 0 0>;
+	};
+
+	qcom,bam_dmux@4044000 {
+		/delete-property/ qcom,fast-shutdown;
+	};
+
+	qcom,mss@4080000 {
+		/delete-property/ qcom,gpio-shutdown-ack;
+	};
+
+	tlmm_pinmux: pinctrl@1000000 {
+		compatible = "qcom,msm-tlmm-8916";
+		reg = <0x1000000 0x300000>;
+		interrupts = <0 208 0>;
+
+		/*General purpose pins*/
+		gp: gp {
+			qcom,num-pins = <113>;
+			#qcom,pin-cells = <1>;
+			msm_gpio: msm_gpio {
+				compatible = "qcom,msm-tlmm-gp";
+				gpio-controller;
+				#gpio-cells = <2>;
+				interrupt-controller;
+				#interrupt-cells = <2>;
+				num_irqs = <113>;
+			};
+		};
+
+		cam_sensor_mclk0 {
+			/* MCLK */
+			qcom,pins = <&gp 26>;
+			qcom,num-grp-pins = <1>;
+			qcom,pin-func = <1>;
+			label = "cam-sensor-mclk0";
+			 /* active state */
+			cam_sensor_mclk0_default: default {
+				drive-strength = <2>; /* 2 MA */
+				bias-disable = <0>; /* No PULL */
+			};
+		};
+
+		cam_sensor_mclk0_sleep {
+			/* MCLK */
+			qcom,pins = <&gp 26>;
+			qcom,num-grp-pins = <1>;
+			label = "cam-sensor-mclk0-sleep";
+			/* suspend state */
+			cam_sensor_mclk0_sleep: sleep {
+				drive-strength = <2>; /* 2 MA */
+				bias-pull-down; /* PULL DOWN */
+			};
+		};
+
+		cam_sensor_mclk1 {
+			/* MCLK */
+			qcom,pins = <&gp 27>;
+			qcom,num-grp-pins = <1>;
+			qcom,pin-func = <1>;
+			label = "cam-sensor-mclk1";
+			/* active state */
+			cam_sensor_mclk1_default: default {
+				drive-strength = <2>; /* 2 MA */
+				bias-disable = <0>; /* No PULL */
+			};
+		};
+
+		cam_sensor_mclk1_sleep {
+			/* MCLK */
+			qcom,pins = <&gp 27>;
+			qcom,num-grp-pins = <1>;
+			label = "cam-sensor-mclk1-sleep";
+			/* suspend state */
+			cam_sensor_mclk1_sleep: sleep {
+				drive-strength = <2>; /* 2 MA */
+				bias-pull-down; /* PULL DOWN */
+			};
+		};
+
+		cam_sensor_rear {
+			/* RESET, STANDBY */
+			qcom,pins =  <&gp 35>, <&gp 34>;
+			qcom,num-grp-pins = <2>;
+			qcom,pin-func = <0>;
+			label = "cam-sensor-rear";
+			/* active state */
+			cam_sensor_rear_default: default {
+				drive-strength = <2>; /* 2 MA */
+				bias-disable = <0>; /* No PULL */
+			};
+		};
+
+		cam_sensor_rear_sleep {
+			/* RESET, STANDBY */
+			qcom,pins =  <&gp 35>, <&gp 34>;
+			qcom,num-grp-pins = <2>;
+			qcom,pin-func = <0>;
+			label = "cam-sensor-rear-sleep";
+			/*suspended state */
+			cam_sensor_rear_sleep: sleep {
+				drive-strength = <2>; /* 2 MA */
+				bias-pull-down; /* PULL DOWN */
+			};
+		};
+
+		cam_sensor_front {
+			/* RESET, STANDBY */
+			qcom,pins = <&gp 28>, <&gp 33>;
+			qcom,num-grp-pins = <2>;
+			qcom,pin-func = <0>;
+			label = "cam_sensor_front";
+			/* active state */
+			cam_sensor_front_default: default {
+				drive-strength = <2>; /* 2 MA */
+				bias-disable = <0>; /* No PULL */
+			};
+		};
+
+		cam_sensor_front_sleep {
+			/* RESET, STANDBY */
+			qcom,pins = <&gp 28>, <&gp 33>;
+			qcom,num-grp-pins = <2>;
+			qcom,pin-func = <0>;
+			label = "cam-sensor-front-sleep";
+			/* suspended state */
+			cam_sensor_front_sleep: sleep {
+				drive-strength = <2>; /* 2 MA */
+				bias-pull-down = <0>; /* PULL DOWN */
+			};
+		};
+
+		cam_sensor_flash {
+			/* FLASH_RESET,FLASH_EN,FLASH_NOW */
+			qcom,pins = <&gp 36>, <&gp 31>,<&gp 32> ;
+			qcom,num-grp-pins = <3>;
+			qcom,pin-func = <0>;
+			label = "cam_sensor_flash";
+			/* active state */
+			cam_sensor_flash_default: default {
+				drive-strength = <2>; /* 2 MA */
+				bias-disable = <0>; /* No PULL */
+			};
+			/*suspended state */
+			cam_sensor_flash_sleep: sleep {
+				drive-strength = <2>; /* 2 MA */
+				bias-pull-down = <0>; /* PULL DOWN */
+			};
+		};
+	};
+};
+
+&gfx_iommu {
+	interrupts = <0 75 0>, <0 74 0>;
+};
+
+&apps_iommu {
+	interrupts = <0 73 0>, <0 70 0>;
+
+	qcom,iommu-ctx@1e22000 {
+		compatible = "qcom,msm-smmu-v2-ctx";
+		reg = <0x1e22000 0x1000>;
+		interrupts = <0 103 0>, <0 103 0>;
+		qcom,iommu-ctx-sids = <0x1c0 0x1ca 0x1004>;
+		label = "MSA0_Audio";
+		qcom,secure-context;
+		qcom,iommu-sid-mask = <0x1 0x1 0x2>;
+	};
+
+	qcom,iommu-ctx@1e3f000 {
+		compatible = "qcom,msm-smmu-v2-ctx";
+		qcom,secure-context;
+		reg = <0x1e3f000 0x1000>;
+		interrupts = <0 152 0>;
+		qcom,iommu-ctx-sids = <0xc0 0xd0 0xd3 0xf0 0xf3>;
+		qcom,iommu-sid-mask = <0x23 0x0 0x0 0x0 0x0>;
+		label = "periph_CE_secure";
+	};
+
+};
+
+&venus_ns {
+	compatible = "qcom,msm-smmu-v2-ctx";
+	reg = <0x1e25000 0x1000>;
+	interrupts = <0 106 0>;
+	qcom,iommu-ctx-sids = <0x800 0x807 0x808 0x811>;
+	label = "venus_ns";
+	qcom,iommu-sid-mask = <0x0 0x0 0x27 0x220>;
+	/delete-property/ qcom,report-error-on-fault;
+};
+
+&venus_sec_pixel {
+	/delete-property/ qcom,report-error-on-fault;
+};
+
+&venus_sec_bitstream {
+	/delete-property/ qcom,report-error-on-fault;
+};
+
+&venus_sec_non_pixel {
+	/delete-property/ qcom,report-error-on-fault;
+};
+
+&venus_fw {
+	/delete-property/ qcom,report-error-on-fault;
+};
+
+&pm8909_l6 {
+	regulator-alway-on;
+};
+
+&pm8909_l17 {
+	regulator-always-on;
+};
+
+&ts_int_suspend {
+	/delete-property/ bias-pull-down;
+	bias-pull-up;
+};
+
+&peripheral_mem {
+	reg = <0x0 0x8d500000 0x0 0x0500000>;
+};
+
+&sdc2_cd_on {
+	/delete-property/ bias-pull-up;
+	bias-pull-down;
+};
+
+&sdc2_cd_off {
+	/delete-property/ bias-disable;
+	bias-pull-down;
+};
+
+&sdhc_2 {
+	interrupts = <0 1 2>;
+	interrupt-map = <0 &intc 0 125 0
+		1 &intc 0 221 0>;
+	interrupt-names = "hc_irq", "pwr_irq";
+	qcom,vdd-current-level = <4000 400000>;
+	/delete-property/ cd-gpios;
+	qcom,nonhotplug;
+	qcom,no-1p8v;
+	qcom,vdd-always-on;
+	qcom,vdd-lpm-sup;
+};
+
+&usb_otg {
+	qcom,hsusb-otg-phy-init-seq = <0x73 0x80 0x6b 0x81 0xffffffff>;
+};
